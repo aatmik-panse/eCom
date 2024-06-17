@@ -1,0 +1,32 @@
+import Link from "next/link";
+import React from "react";
+
+export default function Header() {
+  return (
+    <div>
+      <header className="navbar justify-between bg-base-300 ">
+        <section className="navbar-section">
+          <Link href="/" className="btn  btn-ghost text-xl">
+            Home
+          </Link>
+          <Link href="/products" className="btn btn-ghost text-xl">
+            Products
+          </Link>
+        </section>
+        <section className="navbar-center btn btn-ghost text-teal-500 text-2xl">
+          <Link href="/" className="navbar-brand ">
+            eCommerce Site
+          </Link>
+        </section>
+        <section className="navbar-section ">
+          <Link href="/" className="btn  btn-ghost text-xl">
+            Cart
+          </Link>
+          <Link href="/" className="btn  btn-ghost text-xl">
+            Login
+          </Link>
+        </section>
+      </header>
+    </div>
+  );
+}
