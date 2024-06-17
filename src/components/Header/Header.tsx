@@ -9,8 +9,8 @@ export default function Header() {
           <Link href="/" className="btn  btn-ghost text-xl">
             Home
           </Link>
-          <Link href="/products" className="btn btn-ghost text-xl">
-            Products
+          <Link href="/product" className="btn btn-ghost text-xl">
+            Product
           </Link>
         </section>
         <section className="navbar-center btn btn-ghost text-teal-500 text-2xl">
