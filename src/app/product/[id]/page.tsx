@@ -59,6 +59,11 @@ export default function page({
                 <div>Status</div>
               </div>
             </div>
+            <div className=" card-actions justify-center">
+              <button className="btn btn-primary w-auto" type="button">
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       </div>
