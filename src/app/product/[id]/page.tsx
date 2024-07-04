@@ -2,6 +2,7 @@ import data from "@/lib/data";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
+import AddToCart from "@/components/products/AddToCart";
 
 export default function page({
   params,
@@ -59,11 +60,13 @@ export default function page({
                 <div>Status</div>
               </div>
             </div>
-            <div className=" card-actions justify-center">
-              <button className="btn btn-primary w-auto" type="button">
-                Add to Cart
-              </button>
-            </div>
+            {product.price != 0 && (
+              <div className=" card-actions justify-center">
+                <AddToCart
+                  product={{ ...product, quantity: 0, color: "", size: "" }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
