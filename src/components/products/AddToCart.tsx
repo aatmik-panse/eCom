@@ -1,16 +1,16 @@
 "use client";
 
 import React from "react";
-import { useCartService } from "@/lib/hooks/useCartStore";
 import { OrderItem } from "@/lib/models/OrderModel";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import useCartService from "@/lib/hooks/useCartStore";
 
 export default function AddToCart({ product }: { product: OrderItem }) {
   //   const router = useRouter();
 
   const { items, increaseItem } = useCartService();
-  const [existing, setExisting] = useState<OrderItem | null>(null);
+  const [existing, setExisting] = useState<OrderItem | undefined>();
   useEffect(() => {
     setExisting(items.find((x) => x.id === product.id));
   }, [items, product]);
