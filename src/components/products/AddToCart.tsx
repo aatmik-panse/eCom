@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import useCartService from "@/lib/hooks/useCartStore";
 
 export default function AddToCart({ product }: { product: OrderItem }) {
-  //   const router = useRouter();
+  // const router = useRouter();
 
   const { items, increaseItem } = useCartService();
   const [existing, setExisting] = useState<OrderItem | undefined>();

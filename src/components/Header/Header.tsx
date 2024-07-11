@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import Menu from "./Menu";
 
 export default function Header() {
   return (
@@ -19,9 +20,7 @@ export default function Header() {
           </Link>
         </section>
         <section className="navbar-section ">
-          <Link href="/" className="btn  btn-ghost text-xl">
-            Cart
-          </Link>
+          <Menu />
           <Link href="/" className="btn  btn-ghost text-xl">
             Login
           </Link>
