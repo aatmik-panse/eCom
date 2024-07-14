@@ -3,7 +3,6 @@ import AddToCart from "@/components/products/AddToCart";
 // import productService from "@/lib/services/productService";
 import Image from "next/image";
 import Link from "next/link";
-import slugify from "slugify";
 import data from "@/lib/data";
 
 // import { Rating } from "@/components/products/Rating";
