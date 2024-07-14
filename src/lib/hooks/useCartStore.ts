@@ -1,6 +1,7 @@
 import { create } from "zustand";
+import { OrderItem, ShippingAddress } from "../models/OrderModel";
+import { persist } from "zustand/middleware";
 import { round2 } from "../utils/utils";
-import { OrderItem } from "../models/OrderModel";
 
 type Cart = {
   items: OrderItem[];
@@ -8,6 +9,9 @@ type Cart = {
   taxPrice: number;
   shippingPrice: number;
   totalPrice: number;
+
+  paymentMethod: string;
+  shippingAddress: ShippingAddress;
 };
 const initialState: Cart = {
   items: [],
@@ -15,47 +19,101 @@ const initialState: Cart = {
   taxPrice: 0,
   shippingPrice: 0,
   totalPrice: 0,
+  paymentMethod: "PayPal",
+  shippingAddress: {
+    fullName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    country: "",
+  },
 };
 
-export const cartStore = create<Cart>(() => initialState);
+export const cartStore = create<Cart>()(
+  persist(() => initialState, {
+    name: "cartStore",
+  })
+);
 
 export default function useCartService() {
-  const { items, itemsPrice, taxPrice, shippingPrice, totalPrice } =
-    cartStore();
+  const {
+    items,
+    itemsPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+    paymentMethod,
+    shippingAddress,
+  } = cartStore();
   return {
     items,
     itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
-    increaseItem: (item: OrderItem) => {
-      const existing = items.find((x) => x.id === item.id);
-      const newItems = existing
+    paymentMethod,
+    shippingAddress,
+    increase: (item: OrderItem) => {
+      const exist = items.find((x) => x.slug === item.slug);
+      const updatedCartItems = exist
         ? items.map((x) =>
-            x.id === item.id
-              ? { ...existing, quantity: existing.quantity + 1 }
-              : x
+            x.slug === item.slug ? { ...exist, qty: exist.qty + 1 } : x
           )
-        : [...items, { ...item, quantity: 1 }];
-      const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
-        calculateCart(newItems);
+        : [...items, { ...item, qty: 1 }];
+      const { itemsPrice, shippingPrice, taxPrice, totalPrice } =
+        calcPrice(updatedCartItems);
       cartStore.setState({
-        items: newItems,
+        items: updatedCartItems,
         itemsPrice,
-        taxPrice,
         shippingPrice,
+        taxPrice,
         totalPrice,
       });
     },
+    decrease: (item: OrderItem) => {
+      const exist = items.find((x) => x.slug === item.slug);
+      if (!exist) return;
+      const updatedCartItems =
+        exist.qty === 1
+          ? items.filter((x: OrderItem) => x.slug !== item.slug)
+          : items.map((x) =>
+              item.slug ? { ...exist, qty: exist.qty - 1 } : x
+            );
+      const { itemsPrice, shippingPrice, taxPrice, totalPrice } =
+        calcPrice(updatedCartItems);
+      cartStore.setState({
+        items: updatedCartItems,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      });
+    },
+    saveShippingAddrress: (shippingAddress: ShippingAddress) => {
+      cartStore.setState({
+        shippingAddress,
+      });
+    },
+    savePaymentMethod: (paymentMethod: string) => {
+      cartStore.setState({
+        paymentMethod,
+      });
+    },
+    clear: () => {
+      cartStore.setState({
+        items: [],
+      });
+    },
+    init: () => cartStore.setState(initialState),
   };
 }
 
-const calculateCart = (items: OrderItem[]) => {
+const calcPrice = (items: OrderItem[]) => {
   const itemsPrice = round2(
-    items.reduce((a, c) => a + c.price * c.quantity, 0)
-  );
-  const taxPrice = round2(itemsPrice * 0.18);
-  const shippingPrice = itemsPrice > 500 ? 0 : 50;
-  const totalPrice = round2(itemsPrice + taxPrice + shippingPrice);
-  return { itemsPrice, taxPrice, shippingPrice, totalPrice };
+      items.reduce((acc, item) => acc + item.price * item.qty, 0)
+    ),
+    shippingPrice = round2(itemsPrice > 600 ? 0 : 600),
+    taxPrice = round2(Number(0.18 * itemsPrice)),
+    totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
+  return { itemsPrice, shippingPrice, taxPrice, totalPrice };
 };

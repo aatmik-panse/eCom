@@ -1,38 +1,29 @@
 "use client";
-
-import React from "react";
-import { OrderItem } from "@/lib/models/OrderModel";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import useCartService from "@/lib/hooks/useCartStore";
+import { OrderItem } from "@/lib/models/OrderModel";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function AddToCart({ product }: { product: OrderItem }) {
-  // const router = useRouter();
+export default function AddToCart({ item }: { item: OrderItem }) {
+  const router = useRouter();
+  const { items, increase, decrease } = useCartService();
+  const [existItem, setExistItem] = useState<OrderItem | undefined>();
 
-  const { items, increaseItem } = useCartService();
-  const [existing, setExisting] = useState<OrderItem | undefined>();
   useEffect(() => {
-    setExisting(items.find((x) => x.id === product.id));
-  }, [items, product]);
+    setExistItem(items.find((x) => x.slug === item.slug));
+  }, [item, items]);
 
   const addToCartHandler = () => {
-    increaseItem(product);
+    increase(item);
   };
-
-  return existing ? (
+  return existItem ? (
     <div>
-      <button className="btn " type="button">
-        {" "}
-        -{" "}
+      <button className="btn" type="button" onClick={() => decrease(existItem)}>
+        -
       </button>
-      <span className=" px-2">{existing.quantity}</span>
-      <button
-        className="btn "
-        type="button"
-        onClick={() => increaseItem(existing)}
-      >
-        {" "}
-        +{" "}
+      <span className="px-2">{existItem.qty}</span>
+      <button className="btn" type="button" onClick={() => increase(existItem)}>
+        +
       </button>
     </div>
   ) : (
@@ -41,8 +32,7 @@ export default function AddToCart({ product }: { product: OrderItem }) {
       type="button"
       onClick={addToCartHandler}
     >
-      {" "}
-      AddToCart{" "}
+      Add to cart
     </button>
   );
 }
