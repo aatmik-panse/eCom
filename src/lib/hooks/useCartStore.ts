@@ -77,7 +77,7 @@ export default function useCartService() {
         exist.qty === 1
           ? items.filter((x: OrderItem) => x.slug !== item.slug)
           : items.map((x) =>
-              item.slug ? { ...exist, qty: exist.qty - 1 } : x
+              x.slug === item.slug ? { ...x, qty: x.qty - 1 } : x
             );
       const { itemsPrice, shippingPrice, taxPrice, totalPrice } =
         calcPrice(updatedCartItems);
@@ -112,7 +112,7 @@ const calcPrice = (items: OrderItem[]) => {
   const itemsPrice = round2(
       items.reduce((acc, item) => acc + item.price * item.qty, 0)
     ),
-    shippingPrice = round2(itemsPrice > 600 ? 0 : 600),
+    shippingPrice = round2(itemsPrice > 499 ? 0 : 499),
     taxPrice = round2(Number(0.18 * itemsPrice)),
     totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
   return { itemsPrice, shippingPrice, taxPrice, totalPrice };

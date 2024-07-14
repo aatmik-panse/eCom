@@ -1,10 +1,9 @@
 import AddToCart from "@/components/products/AddToCart";
+import data from "@/lib/data";
 // import { convertDocToObj } from "@/lib/utils";
 // import productService from "@/lib/services/productService";
 import Image from "next/image";
 import Link from "next/link";
-import data from "@/lib/data";
-
 // import { Rating } from "@/components/products/Rating";
 
 export async function generateMetadata({
@@ -12,14 +11,14 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }) {
-  // const product = await productService.getBySlug(params.slug);
-  // if (!product) {
-  //   return { title: "Product not found" };
-  // }
-  // return {
-  //   title: product.name,
-  //   description: product.description,
-  // };
+  const product = await data.products.find((p) => p.slug === params.slug);
+  if (!product) {
+    return { title: "Product not found" };
+  }
+  return {
+    title: product.name,
+    description: product.description,
+  };
 }
 
 export default async function ProductDetails({
@@ -27,10 +26,9 @@ export default async function ProductDetails({
 }: {
   params: { slug: string };
 }) {
-  // const product = await productService.getBySlug(params.slug);
-  const product = data.products.find((a) => a._id === params.slug);
+  const product = await data.products.find((p) => p.slug === params.slug);
   if (!product) {
-    return <div>Product Not Found</div>;
+    return <div>Product not found</div>;
   }
   return (
     <>
@@ -67,7 +65,7 @@ export default async function ProductDetails({
               <div className="divider"></div>
             </li>
             <li>
-              Description: <p>{}</p>
+              Description: <p>{product.description}</p>
             </li>
           </ul>
         </div>
@@ -81,18 +79,14 @@ export default async function ProductDetails({
               <div className="mb-2 flex justify-between">
                 <div>Status</div>
                 <div>
-                  {/* {product.countInStock > 0 ? "In stock" : "Unavailable"} */}
+                  {product.countInStock > 0 ? "In stock" : "Unavailable"}
                 </div>
               </div>
-              {true && (
+              {product.countInStock !== 0 && (
                 <div className="card-actions justify-center">
                   <AddToCart
                     item={{
-                      // ...convertDocToObj(product),
-                      name: "",
-                      slug: params.slug,
-                      image: "",
-                      price: 4,
+                      ...product,
                       qty: 0,
                       color: "",
                       size: "",
