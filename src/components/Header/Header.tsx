@@ -21,9 +21,6 @@ export default function Header() {
         </section>
         <section className="navbar-section ">
           <Menu />
-          <Link href="/" className="btn  btn-ghost text-xl">
-            Login
-          </Link>
         </section>
       </header>
     </div>
