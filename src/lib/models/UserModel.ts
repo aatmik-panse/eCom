@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export type Users = {
+export type User = {
   _id: string;
   name: string;
   email: string;
@@ -27,6 +27,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const UserModel = mongoose.models?.Users || mongoose.model("Users", UserSchema);
+const UserModel = mongoose.models?.User || mongoose.model("User", UserSchema);
 
 export default UserModel;
