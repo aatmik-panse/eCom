@@ -1,11 +1,10 @@
 "use client";
 import useCartService from "@/lib/hooks/useCartStore";
-// import useLayoutService from "@/lib/hooks/useLayout";
-// import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-// import { SearchBox } from "./SearchBox";
+import { SearchBox } from "./SearchBox";
 
 const Menu = () => {
   const { items, init } = useCartService();
@@ -14,12 +13,12 @@ const Menu = () => {
     setMounted(true);
   }, []);
 
-  // const signoutHandler = () => {
-  //   signOut({ callbackUrl: "/signin" });
-  //   init();
-  // };
+  const signoutHandler = () => {
+    signOut({ callbackUrl: "/signin" });
+    init();
+  };
 
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
   // const { theme, toggleTheme } = useLayoutService();
 
@@ -29,7 +28,9 @@ const Menu = () => {
 
   return (
     <>
-      <div className="hidden md:block">{/* <SearchBox /> */}</div>
+      <div className="hidden md:block">
+        <SearchBox />
+      </div>
       <div>
         <ul className="flex items-stretch">
           <i>
@@ -72,13 +73,12 @@ const Menu = () => {
               )}
             </Link>
           </li>
-          {false && (
-            // session.user ? (
+          {session && session.user ? (
             <>
               <li>
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <label tabIndex={0} className="btn btn-ghost rounded-btn">
-                    {/* {session.user.name} */}
+                    {session.user.name}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -98,11 +98,11 @@ const Menu = () => {
                     tabIndex={0}
                     className="menu dropdown-content z-[1] p-2 shadow bg-base-300 rounded-box w-52 "
                   >
-                    {/* {session.user.isAdmin && (
+                    {session.user.isAdmin && (
                       <li onClick={handleClick}>
                         <Link href="/admin/dashboard">Admin Dashboard</Link>
                       </li>
-                    )} */}
+                    )}
 
                     <li onClick={handleClick}>
                       <Link href="/order-history">Order history </Link>
@@ -111,27 +111,25 @@ const Menu = () => {
                       <Link href="/profile">Profile</Link>
                     </li>
                     <li onClick={handleClick}>
-                      {/* <button type="button" onClick={signoutHandler}>
+                      <button type="button" onClick={signoutHandler}>
                         Sign out
-                      </button> */}
+                      </button>
                     </li>
                   </ul>
                 </div>
               </li>
             </>
-          )}
-          :{" "}
-          {
+          ) : (
             <li>
               <button
                 className="btn btn-ghost rounded-btn"
                 type="button"
-                // onClick={() => signIn()}
+                onClick={() => signIn()}
               >
                 Sign in
               </button>
             </li>
-          }
+          )}
         </ul>
       </div>
     </>
