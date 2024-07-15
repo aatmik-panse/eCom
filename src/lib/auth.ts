@@ -1,28 +1,30 @@
-import credentials from "next-auth/providers/credentials";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 import dbConnect from "./dbConnect";
 import UserModel from "./models/UserModel";
-import bcrypt from "bcryptjs";
+import NextAuth from "next-auth";
 
 export const config = {
   providers: [
-    credentials({
-      name: "Credentials",
+    CredentialsProvider({
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: {
+          type: "email",
+        },
+        password: { type: "password" },
       },
       async authorize(credentials) {
         await dbConnect();
         if (credentials == null) return null;
-        const user = await UserModel.findOne({
-          email: credentials.email,
-        });
+
+        const user = await UserModel.findOne({ email: credentials.email });
+
         if (user) {
-          const isValid = await bcrypt.compare(
+          const isMatch = await bcrypt.compare(
             credentials.password as string,
             user.password
           );
-          if (isValid) {
+          if (isMatch) {
             return user;
           }
         }
@@ -30,4 +32,42 @@ export const config = {
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+    newUser: "/register",
+    error: "/signin",
+  },
+  callbacks: {
+    async jwt({ user, trigger, session, token }: any) {
+      if (user) {
+        token.user = {
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          isAdmin: user.isAdmin,
+        };
+      }
+      if (trigger === "update" && session) {
+        token.user = {
+          ...token.user,
+          email: session.user.email,
+          name: session.user.name,
+        };
+      }
+      return token;
+    },
+    session: async ({ session, token }: any) => {
+      if (token) {
+        session.user = token.user;
+      }
+      return session;
+    },
+  },
 };
+
+export const {
+  handlers: { GET, POST },
+  auth,
+  signIn,
+  signOut,
+} = NextAuth(config);
