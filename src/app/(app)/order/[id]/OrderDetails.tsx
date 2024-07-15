@@ -1,4 +1,5 @@
 "use client";
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { OrderItem } from "@/lib/models/OrderModel";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -41,6 +42,20 @@ export default function OrderDetails({
     })
       .then((response) => response.json())
       .then((order) => order.id);
+  }
+
+  function onApprovePayPalOrder(data: any) {
+    return fetch(`/api/orders/${orderId}/capture-paypal-order`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((orderData) => {
+        toast.success("Order paid successfully");
+      });
   }
 
   const { data, error } = useSWR(`/api/orders/${orderId}`);
@@ -164,6 +179,19 @@ export default function OrderDetails({
                     <div>${totalPrice}</div>
                   </div>
                 </li>
+
+                {!isPaid && paymentMethod === "PayPal" && (
+                  <li>
+                    <PayPalScriptProvider
+                      options={{ clientId: paypalClientId }}
+                    >
+                      <PayPalButtons
+                        createOrder={createPayPalOrder}
+                        onApprove={onApprovePayPalOrder}
+                      />
+                    </PayPalScriptProvider>
+                  </li>
+                )}
                 {session?.user.isAdmin && (
                   <li>
                     <button
