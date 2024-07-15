@@ -33,7 +33,7 @@ export type Product = {
   image: string;
   banner?: string;
   category?: string;
-  countInStock?: number;
+  countInStock: number;
   rating?: number;
   numReviews?: number;
   brand?: string;

@@ -12,3 +12,25 @@ const getLatest = cache(async () => {
     .lean();
   return products as Product[];
 });
+
+const getFeatured = cache(async () => {
+  await dbConnect();
+  const products = await ProductModel.find({ isFeatured: true })
+    .limit(8)
+    .lean();
+  return products as Product[];
+});
+
+const getBySlug = cache(async (slug: string) => {
+  await dbConnect();
+  const product = await ProductModel.findOne({ slug }).lean();
+  return product as Product;
+});
+
+const productService = {
+  getLatest,
+  getFeatured,
+  getBySlug,
+};
+
+export default productService;
