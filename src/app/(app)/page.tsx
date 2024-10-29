@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 import ProductItem from "@/components/products/ProductItem";
-import data from "@/lib/data";
 import productService from "@/lib/services/productService";
 import { convertDocToObj } from "@/lib/utils/utils";
 // import { convertDocToObj } from "@/lib/utils";
@@ -11,6 +10,7 @@ export const metadata: Metadata = {
   title: "E-Commerce",
   description: "E-commerce website built with Next.js",
 };
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const featuredProducts = await productService.getFeatured();
