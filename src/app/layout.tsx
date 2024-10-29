@@ -22,8 +22,8 @@ export default function RootLayout({
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Header />
-            {children}
-            <footer className="footer footer-center bg-base-300 text-base-content py-4 ">
+            <main className="flex-grow">{children}</main>
+            <footer className="footer footer-center bg-base-300 text-base-content py-4">
               Build with ❤️ by Aatmik
             </footer>
           </div>
