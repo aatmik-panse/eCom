@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const ProductSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     category: { type: String, required: true },
     image: { type: String, required: true },
@@ -27,16 +27,24 @@ export default ProductModel;
 export type Product = {
   _id?: string;
   slug: string;
-  name: string;
+  title: string;
   description?: string;
   price?: number;
   image: string;
   banner?: string;
   category?: string;
   countInStock: number;
-  rating?: number;
+  rating?: {
+    rate: number;
+    count: number;
+  };
   numReviews?: number;
   brand?: string;
   colors?: string[];
   sizes?: string[];
 };
+
+const ratingSchema = new mongoose.Schema({
+  rate: { type: Number, required: true },
+  count: { type: Number, required: true },
+});

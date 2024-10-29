@@ -15,7 +15,7 @@ export async function generateMetadata({
     return { title: "Product not found" };
   }
   return {
-    title: product.name,
+    title: product.title,
     description: product.description,
   };
 }
@@ -38,7 +38,7 @@ export default async function ProductDetails({
         <div className="md:col-span-2">
           <Image
             src={product.image}
-            alt={product.name}
+            alt={product.title}
             width={640}
             height={640}
             sizes="100vw"
@@ -51,13 +51,17 @@ export default async function ProductDetails({
         <div>
           <ul className="space-y-4">
             <li>
-              <h1 className="text-xl">{product.name}</h1>
+              <h1 className="text-xl">{product.title}</h1>
             </li>
             <li>
               {/* <Rating
                 value={product.rating}
                 caption={`${product.numReviews} ratings`}
               /> */}
+              <div>
+                <span>{product.rating?.rate}</span>
+                <span>{product.rating?.count}</span>
+              </div>
             </li>
             <li> {product.brand}</li>
             <li>
