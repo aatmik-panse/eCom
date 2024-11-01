@@ -73,7 +73,7 @@ export type Order = {
 };
 
 export type OrderItem = {
-  name: string;
+  title: string;
   slug: string;
   qty: number;
   image: string;
