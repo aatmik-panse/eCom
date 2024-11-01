@@ -46,11 +46,11 @@ export default function CartDetails() {
                       >
                         <Image
                           src={item.image}
-                          alt={item.name}
+                          alt={item.title}
                           width={50}
                           height={50}
                         ></Image>
-                        <span className="px-2">{item.name}</span>
+                        <span className="px-2">{item.title}</span>
                       </Link>
                     </td>
                     <td>

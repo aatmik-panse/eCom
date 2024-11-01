@@ -131,12 +131,12 @@ export default function OrderDetails({
                         >
                           <Image
                             src={item.image}
-                            alt={item.name}
+                            alt={item.title}
                             width={50}
                             height={50}
                           ></Image>
                           <span className="px-2">
-                            {item.name} ({item.color} {item.size})
+                            {item.title} ({item.color} {item.size})
                           </span>
                         </Link>
                       </td>
