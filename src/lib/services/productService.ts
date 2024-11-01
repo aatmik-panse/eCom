@@ -18,13 +18,13 @@ const getFeatured = cache(async () => {
   const products = await ProductModel.find({ isFeatured: true })
     .limit(8)
     .lean();
-  return products as Product[];
+  return products as unknown as Product[];
 });
 
 const getBySlug = cache(async (slug: string) => {
   await dbConnect();
   const product = await ProductModel.findOne({ slug }).lean();
-  return product as Product;
+  return product as unknown as Product;
 });
 
 const productService = {
