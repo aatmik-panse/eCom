@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { title } from "process";
 
 const orderSchema = new mongoose.Schema(
   {
@@ -14,7 +15,7 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        name: { type: String, required: true },
+        title: { type: String, required: true },
         slug: { type: String, required: true },
         qty: { type: Number, required: true },
         image: { type: String, required: true },
