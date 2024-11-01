@@ -10,7 +10,7 @@ const getLatest = cache(async () => {
     .sort({ _id: -1 })
     // .limit(5)
     .lean();
-  return products as Product[];
+  return products as unknown as Product[];
 });
 
 const getFeatured = cache(async () => {
